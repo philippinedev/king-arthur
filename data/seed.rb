@@ -1,8 +1,8 @@
 class Seed
   class << self
     def call
-      male   = 'Mail'
-      female = 'Femail'
+      male   = 'Male'
+      female = 'Female'
 
       # First Generation
       king_arthur    = Person.create(name: 'King Arthur', gender: male)
