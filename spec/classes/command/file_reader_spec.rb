@@ -2,9 +2,8 @@ require 'spec_helper'
 
 RSpec.describe FileReader do
   let(:file) { "missing.txt" }
-  let(:input_file) { test_file(file) }
 
-  subject { FileReader.call(input_file) }
+  subject { FileReader.call(file) }
 
   context 'when file does not exist' do
     it 'will raise error' do

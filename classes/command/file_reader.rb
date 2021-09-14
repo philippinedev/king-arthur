@@ -20,6 +20,10 @@ class FileReader
   private
 
   def raw_lines
-    File.readlines(@file)
+    File.readlines(file_path)
+  end
+
+  def file_path
+    "#{File.dirname(__FILE__)}/../../test_files/#{@file}"
   end
 end
