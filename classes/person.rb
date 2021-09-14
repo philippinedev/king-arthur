@@ -1,8 +1,8 @@
 class Person
-  GENDERS = [
-    'Male',
-    'Female'
-  ]
+  MALE   = 'Male'.freeze
+  FEMALE = 'Female'.freeze
+
+  GENDERS = [ MALE, FEMALE ]
 
   attr_accessor :name, :gender, :father, :mother, :spouse
 
@@ -22,6 +22,7 @@ class Person
 
   def save
     Application.push(self)
+    spouse.spouse = self if spouse
     self
   end
 
@@ -32,6 +33,64 @@ class Person
       && valid_mother? \
       && valid_spouse?
   end
+
+  def relatives_with_relation(relation)
+    return paternal_uncle if relation == 'Paternal-Uncle'
+    return maternal_uncle if relation == 'Maternal-Uncle'
+    return paternal_aunt  if relation == 'Paternal-Aunt'
+    return maternal_aunt  if relation == 'Maternal-Aunt'
+
+    return sister_in_law  if relation == 'Sister-In-Law'
+    return brother_in_law if relation == 'Brother-In-Law'
+    return siblings       if relation == 'Siblings'
+
+    return son            if relation == 'Son'
+    return daughter       if relation == 'Daughter'
+  end
+
+  def siblings
+    mother.children
+      .filter { |child| child.name != self.name }
+  end
+
+  def sister_in_law
+    male_siblings.map { |brother| brother.spouse }.compact
+  end
+
+  def maternal_aunt
+    mother.female_siblings
+  end
+
+  def female_siblings
+    mother.female_children
+      .filter { |child| child.name != self.name }
+  end
+
+  def male_siblings
+    mother.male_children
+      .filter { |child| child.name != self.name }
+  end
+
+  def children
+    Application.database
+      .filter { |child| child.mother&.name == self.name }
+  end
+
+  def female_children
+    children
+      .filter { |child| child.gender == FEMALE }
+  end
+
+  def male_children
+    children
+      .filter { |child| child.gender == MALE }
+  end
+
+  def male?
+    gender == MALE
+  end
+
+  private
 
   def valid_gender?
     GENDERS.include? @gender
