@@ -7,7 +7,7 @@ class Person
   attr_accessor :name, :gender, :father, :mother, :spouse
 
   class << self
-    def save(params)
+    def create(params)
       new(params).save
     end
   end

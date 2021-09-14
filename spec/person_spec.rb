@@ -132,21 +132,38 @@ RSpec.describe Person do
     end
   end
 
-  describe '#save' do
+  describe 'add one to database' do
     let(:name) { 'Peter' }
     let(:gender) { male }
-    let(:person) do
-      described_class.new(name: name,
-                          gender: gender,
-                          father: father,
-                          mother: mother,
-                          spouse: spouse)
+
+    describe '#save' do
+      let(:person) do
+        described_class.new(name: name,
+                            gender: gender,
+                            father: father,
+                            mother: mother,
+                            spouse: spouse)
+      end
+
+      subject { person.save }
+
+      it 'adds to the data store' do
+        expect { subject }.to change { Application.database.count }.by(1)
+      end
     end
 
-    subject { person.save }
+    describe '.create' do
+      subject {
+        described_class.create(name: name,
+                               gender: gender,
+                               father: father,
+                               mother: mother,
+                               spouse: spouse)
+      }
 
-    it 'adds to the data store' do
-      expect { subject }.to change { Application.database.count }.by(1)
+      it 'adds to the data store' do
+        expect { subject }.to change { Application.database.count }.by(1)
+      end
     end
   end
 end
