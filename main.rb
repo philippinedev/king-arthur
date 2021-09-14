@@ -4,6 +4,7 @@ require 'pry'
 
 Dir["./classes/*.rb"].each { |file| require file }
 Dir["./classes/command/*.rb"].each { |file| require file }
+Dir["./data/*.rb"].each { |file| require file }
 
 def main
   unless ARGV.count == 1
