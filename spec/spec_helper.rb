@@ -1,4 +1,4 @@
-Dir["./classes/*.rb"].each { |file| require file }
+Dir["./classes/command/*.rb"].each { |file| require file }
 
 def test_file(file)
   "#{File.dirname(__FILE__)}/../test_files/#{file}"
