@@ -12,6 +12,23 @@ class Application
     def push(person)
       @@database << person
     end
+
+    def find_by_name(name)
+      @@database.filter { |row| row.name == name }
+        .first
+    end
+
+    def reseed
+      @@database = []
+      Seed.call
+    end
+
+    def transformers
+      [
+        GetRelationshipTransformer,
+        AddChildTransformer
+      ]
+    end
   end
 
   def initialize
