@@ -35,17 +35,17 @@ class Person
   end
 
   def relatives_with_relation(relation)
-    return paternal_uncle if relation == 'Paternal-Uncle'
-    return maternal_uncle if relation == 'Maternal-Uncle'
-    return paternal_aunt  if relation == 'Paternal-Aunt'
+    return paternal_uncle if relation == 'Paternal-Uncle' # TODO
+    return maternal_uncle if relation == 'Maternal-Uncle' # TODO
+    return paternal_aunt  if relation == 'Paternal-Aunt'  # TODO
     return maternal_aunt  if relation == 'Maternal-Aunt'
 
     return sister_in_law  if relation == 'Sister-In-Law'
-    return brother_in_law if relation == 'Brother-In-Law'
+    return brother_in_law if relation == 'Brother-In-Law' # TODO
     return siblings       if relation == 'Siblings'
 
-    return son            if relation == 'Son'
-    return daughter       if relation == 'Daughter'
+    return son            if relation == 'Son'            # TODO
+    return daughter       if relation == 'Daughter'       # TODO
   end
 
   def siblings
@@ -112,4 +112,3 @@ class Person
     spouse.nil? || spouse.class == Person
   end
 end
-
