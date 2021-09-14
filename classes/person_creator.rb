@@ -5,7 +5,7 @@ class PersonCreator
     end
   end
 
-  def initialize(name:, gender:, father:, mother:, spouse:)
+  def initialize(name:, gender:, father: nil, mother: nil, spouse: nil)
     @name = name
     @gender = gender
     @father = father
