@@ -2,6 +2,7 @@
 
 require 'pry'
 
+Dir["./classes/*.rb"].each { |file| require file }
 Dir["./classes/command/*.rb"].each { |file| require file }
 
 def main
