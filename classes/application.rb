@@ -2,6 +2,7 @@ class Application
   class << self
     def start!
       new
+      Seed.call
     end
 
     def database
