@@ -1,3 +1,4 @@
+Dir["./classes/*.rb"].each { |file| require file }
 Dir["./classes/command/*.rb"].each { |file| require file }
 
 def test_file(file)
@@ -104,3 +105,6 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+Application.start!
+
