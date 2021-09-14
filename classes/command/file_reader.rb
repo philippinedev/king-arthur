@@ -2,7 +2,7 @@ require 'pry'
 
 class FileReader
   class << self
-    def readlines(file)
+    def call(file)
       new(file).readlines
     end
   end
