@@ -11,13 +11,16 @@ def main
     return "ERROR: Can only process one file at a time."
   end
 
-  file_path = ARGV[0]
+  file = ARGV[0]
 
-  unless File.exist? file_path
+  unless File.exist? file
     return "ERROR: File does not exist."
   end
 
-  Processor.call(file_path)
+  Application.start!
+
+  file_path = "#{File.dirname(__FILE__)}/#{file}"
+  FileProcessor.call(file_path)
 end
 
 puts main

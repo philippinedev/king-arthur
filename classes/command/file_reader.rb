@@ -24,6 +24,7 @@ class FileReader
   end
 
   def file_path
+    return @file if File.exists? @file
     "#{File.dirname(__FILE__)}/../../test_files/#{@file}"
   end
 end
