@@ -1,16 +1,36 @@
-class Person
+class Person < Repository
   MALE   = 'Male'.freeze
   FEMALE = 'Female'.freeze
 
   GENDERS = [ MALE, FEMALE ]
 
-  attr_accessor :name, :gender, :father, :mother, :spouse
+  attr_accessor :id, :name, :gender, :father, :mother, :spouse
 
-  class << self
-    def create(params)
-      new(params).save
-    end
+  def attributes
+    {
+      id: id,
+      name: name,
+      gender: gender,
+      father: {
+        id: father&.id,
+        name: father&.name
+      },
+      mother: {
+        id: mother&.id,
+        name: mother&.name
+      },
+      spouse: {
+        id: spouse&.id,
+        name: spouse&.name
+      }
+    }
   end
+
+  # class << self
+  #   def new(params)
+  #     super(params)
+  #   end
+  # end
 
   def initialize(name:, gender:, father: nil, mother: nil, spouse: nil)
     @name = name
@@ -20,10 +40,9 @@ class Person
     @spouse = spouse
   end
 
-  def save
-    Application.push(self)
+  def after_save
     spouse.spouse = self if spouse
-    self
+    super
   end
 
   def valid?
@@ -35,60 +54,76 @@ class Person
   end
 
   def relatives_with_relation(relation)
-    return paternal_uncle if relation == 'Paternal-Uncle' # TODO
-    return maternal_uncle if relation == 'Maternal-Uncle' # TODO
-    return paternal_aunt  if relation == 'Paternal-Aunt'  # TODO
-    return maternal_aunt  if relation == 'Maternal-Aunt'
+    return sons           if relation == 'Son'
+    return daughters      if relation == 'Daughter'
+  #
+  #   return paternal_uncle if relation == 'Paternal-Uncle' # TODO
+  #   return maternal_uncle if relation == 'Maternal-Uncle' # TODO
+  #   return paternal_aunt  if relation == 'Paternal-Aunt'  # TODO
+  #   return maternal_aunt  if relation == 'Maternal-Aunt'
 
-    return sister_in_law  if relation == 'Sister-In-Law'
-    return brother_in_law if relation == 'Brother-In-Law' # TODO
-    return siblings       if relation == 'Siblings'
-
-    return son            if relation == 'Son'            # TODO
-    return daughter       if relation == 'Daughter'       # TODO
+  #   return sister_in_law  if relation == 'Sister-In-Law'
+  #   return brother_in_law if relation == 'Brother-In-Law' # TODO
+  #   return siblings       if relation == 'Siblings'
   end
 
-  def siblings
-    mother.children
-      .filter { |child| child.name != self.name }
+  def sons
+    if gender == MALE
+      Person.where(father_id: self.id, gender: MALE)
+    else
+      Person.where(mother_id: self.id, gender: MALE)
+    end
   end
 
-  def sister_in_law
-    male_siblings.map { |brother| brother.spouse }.compact
+  def daughters
+    if gender == MALE
+      Person.where(father_id: self.id, gender: FEMALE)
+    else
+      Person.where(mother_id: self.id, gender: FEMALE)
+    end
   end
 
-  def maternal_aunt
-    mother.female_siblings
-  end
+  # def siblings
+  #   mother.children
+  #     .filter { |child| child.name != self.name }
+  # end
 
-  def female_siblings
-    mother.female_children
-      .filter { |child| child.name != self.name }
-  end
+  # def sister_in_law
+  #   male_siblings.map { |brother| brother.spouse }.compact
+  # end
 
-  def male_siblings
-    mother.male_children
-      .filter { |child| child.name != self.name }
-  end
+  # def maternal_aunt
+  #   mother.female_siblings
+  # end
 
-  def children
-    Application.database
-      .filter { |child| child.mother&.name == self.name }
-  end
+  # def female_siblings
+  #   mother.female_children
+  #     .filter { |child| child.name != self.name }
+  # end
 
-  def female_children
-    children
-      .filter { |child| child.gender == FEMALE }
-  end
+  # def male_siblings
+  #   mother.male_children
+  #     .filter { |child| child.name != self.name }
+  # end
 
-  def male_children
-    children
-      .filter { |child| child.gender == MALE }
-  end
+  # def children
+  #   Application.database
+  #     .filter { |child| child.mother&.name == self.name }
+  # end
 
-  def male?
-    gender == MALE
-  end
+  # def female_children
+  #   children
+  #     .filter { |child| child.gender == FEMALE }
+  # end
+
+  # def male_children
+  #   children
+  #     .filter { |child| child.gender == MALE }
+  # end
+
+  # def male?
+  #   gender == MALE
+  # end
 
   private
 

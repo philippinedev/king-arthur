@@ -36,6 +36,10 @@ RSpec.describe Person do
     }
   end
 
+  before do
+    Repository.clear!
+  end
+
   describe '#valid?' do
     let(:person) { described_class.new(person_params) }
     subject { described_class.new(subject_params).valid? }
@@ -148,7 +152,7 @@ RSpec.describe Person do
       subject { person.save }
 
       it 'adds to the data store' do
-        expect { subject }.to change { Application.database.count }.by(1)
+        expect { subject }.to change { Person.count }.by(1)
       end
     end
 
@@ -162,7 +166,75 @@ RSpec.describe Person do
       }
 
       it 'adds to the data store' do
-        expect { subject }.to change { Application.database.count }.by(1)
+        expect { subject }.to change { Person.count }.by(1)
+      end
+    end
+  end
+
+  describe 'creating a spouse' do
+    let(:husband) { described_class.create(name: "Husbando", gender: "Male") }
+
+    subject { described_class.create(name: "Wifey", gender: "Female", spouse: husband) }
+
+    it "will automatically update the spouse's spouse as well" do
+      expect { subject }.to change { husband.spouse }
+    end
+  end
+
+  context 'with offspring' do
+    describe '#relatives_with_relation - son' do
+      let(:relationship) { 'Son' }
+      let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
+      let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
+      let!(:son1)   { described_class.create(name: "Boy1", gender: "Male", father: father, mother: mother) }
+      let!(:son2)   { described_class.create(name: "Boy2", gender: "Male", father: father, mother: mother) }
+      let!(:daughter) { described_class.create(name: "Girly", gender: "Female", father: father, mother: mother) }
+      let(:sons) { [son1, son2] }
+
+      subject { parent.relatives_with_relation(relationship) }
+
+      context 'when father is parent' do
+        let(:parent) { father }
+
+        it "knows the father's sons" do
+          expect(subject).to eq sons
+        end
+      end
+
+      context 'when mother is parent' do
+        let(:parent) { mother }
+
+        it "knows the mother's sons" do
+          expect(subject).to eq sons
+        end
+      end
+    end
+
+    describe '#relatives_with_relation - daughter' do
+      let(:relationship) { 'Daughter' }
+      let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
+      let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
+      let!(:daughter1) { described_class.create(name: "Girly1", gender: "Female", father: father, mother: mother) }
+      let!(:daughter2) { described_class.create(name: "Girly2", gender: "Female", father: father, mother: mother) }
+      let!(:son)   { described_class.create(name: "Boy", gender: "Male", father: father, mother: mother) }
+      let(:daughters) { [daughter1, daughter2] }
+
+      subject { parent.relatives_with_relation(relationship) }
+
+      context 'when father is parent' do
+        let(:parent) { father }
+
+        it "knows the father's daughters" do
+          expect(subject).to eq daughters
+        end
+      end
+
+      context 'when mother is parent' do
+        let(:parent) { mother }
+
+        it "knows the mother's daughters" do
+          expect(subject).to eq daughters
+        end
       end
     end
   end
