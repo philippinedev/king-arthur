@@ -26,12 +26,6 @@ class Person < Repository
     }
   end
 
-  # class << self
-  #   def new(params)
-  #     super(params)
-  #   end
-  # end
-
   def initialize(name:, gender:, father: nil, mother: nil, spouse: nil)
     @name = name
     @gender = gender
