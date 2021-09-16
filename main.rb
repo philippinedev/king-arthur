@@ -2,6 +2,7 @@
 
 require 'pry'
 
+Dir["./lib/*.rb"].each { |file| require file }
 Dir["./classes/*.rb"].each { |file| require file }
 Dir["./classes/command/*.rb"].each { |file| require file }
 Dir["./data/*.rb"].each { |file| require file }
