@@ -64,8 +64,7 @@ class Person < Repository
     return paternal_uncles if relation == 'Paternal-Uncle'
     return maternal_uncles if relation == 'Maternal-Uncle'
     return paternal_aunts  if relation == 'Paternal-Aunt'
-  #   return maternal_aunts  if relation == 'Maternal-Aunt'
-
+    return maternal_aunts  if relation == 'Maternal-Aunt'
   end
 
   def sons
@@ -119,6 +118,10 @@ class Person < Repository
     father.sisters
   end
 
+  def maternal_aunts
+    mother.sisters
+  end
+
   def sisters_in_law_via_spouse
     spouse&.sisters || []
   end
@@ -137,41 +140,9 @@ class Person < Repository
       .compact
   end
 
-  # def sister_in_law
-  #   male_siblings.map { |brother| brother.spouse }.compact
-  # end
-
-  # def maternal_aunt
-  #   mother.female_siblings
-  # end
-
-  # def female_siblings
-  #   mother.female_children
-  #     .filter { |child| child.name != self.name }
-  # end
-
-  # def male_siblings
-  #   mother.male_children
-  #     .filter { |child| child.name != self.name }
-  # end
-
   def mothers_children
     Person.where(mother_id: self.id)
   end
-
-  # def female_children
-  #   children
-  #     .filter { |child| child.gender == FEMALE }
-  # end
-
-  # def male_children
-  #   children
-  #     .filter { |child| child.gender == MALE }
-  # end
-
-  # def male?
-  #   gender == MALE
-  # end
 
   private
 
