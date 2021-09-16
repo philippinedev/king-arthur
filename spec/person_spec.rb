@@ -265,6 +265,25 @@ RSpec.describe Person do
         expect(subject).to eq sisters_in_law
       end
     end
+
+    describe '#relatives_with_relation - brothers in law' do
+      let(:relationship) { 'Brother-In-Law' }
+      let(:me_wife_papa) { described_class.create(name: "Moypapa", gender: "Male") }
+      let(:me_wife_mama) { described_class.create(name: "Moymama", gender: "Female") }
+      let!(:me_wife_bro1) { described_class.create(name: "Moysis1", gender: "Male", father: me_wife_papa, mother: me_wife_mama) }
+      let!(:me_wife_bro2) { described_class.create(name: "Moysis2", gender: "Male", father: me_wife_papa, mother: me_wife_mama) }
+      let(:me_wife) { described_class.create(name: "Moy", gender: "Female", father: me_wife_papa, mother: me_wife_mama) }
+      let(:me) { described_class.create(name: "Miy", gender: "Male", father: father, mother: mother, spouse: me_wife) }
+      let!(:me_sis1_hus) { described_class.create(name: "Miysis1hus", gender: "Male") }
+      let!(:me_sis2_hus) { described_class.create(name: "Miysis2hus", gender: "Male") }
+      let!(:me_sis1) { described_class.create(name: "Miysis1", gender: "Female", father: father, mother: mother, spouse: me_sis1_hus) }
+      let!(:me_sis2) { described_class.create(name: "Miysis2", gender: "Female", father: father, mother: mother, spouse: me_sis2_hus) }
+      let(:brothers_in_law) { [me_wife_bro1, me_wife_bro2, me_sis1_hus, me_sis2_hus] }
+
+      it 'returns sisters in law' do
+        expect(subject).to eq brothers_in_law
+      end
+    end
   end
 end
 
