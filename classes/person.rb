@@ -63,7 +63,7 @@ class Person < Repository
 
     return paternal_uncles if relation == 'Paternal-Uncle'
     return maternal_uncles if relation == 'Maternal-Uncle'
-  #   return paternal_aunts  if relation == 'Paternal-Aunt'  # TODO
+    return paternal_aunts  if relation == 'Paternal-Aunt'
   #   return maternal_aunts  if relation == 'Maternal-Aunt'
 
   end
@@ -85,8 +85,8 @@ class Person < Repository
   end
 
   def siblings
-    mother.mothers_children
-      .filter { |child| child.id != self.id }
+    mother&.mothers_children
+      &.filter { |child| child.id != self.id } || []
   end
 
   def brothers
@@ -113,6 +113,10 @@ class Person < Repository
 
   def maternal_uncles
     mother.brothers
+  end
+
+  def paternal_aunts
+    father.sisters
   end
 
   def sisters_in_law_via_spouse
