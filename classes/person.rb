@@ -144,6 +144,10 @@ class Person < Repository
     Person.where(mother_id: self.id)
   end
 
+  def male?
+    gender == MALE
+  end
+
   private
 
   def valid_gender?

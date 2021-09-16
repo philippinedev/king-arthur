@@ -40,6 +40,26 @@ RSpec.describe Person do
     Repository.clear!
   end
 
+  describe '#male?' do
+    subject { described_class.create(subject_params).male? }
+
+    context 'when male' do
+      let(:gender) { male }
+
+      it 'returns true' do
+        expect(subject).to eq true
+      end
+    end
+
+    context 'when female' do
+      let(:gender) { female }
+
+      it 'returns false' do
+        expect(subject).to eq false
+      end
+    end
+  end
+
   describe '#valid?' do
     let(:person) { described_class.new(person_params) }
     subject { described_class.new(subject_params).valid? }
