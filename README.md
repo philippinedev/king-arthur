@@ -16,4 +16,4 @@ Finished in 0.04655 seconds (files took 0.59868 seconds to load)
 - ./main.rb test_files/success_get_relationship_2.txt
 
 ## Screenshot
-![Screenshot](https://github.com/philippinedev/king-arthur.git/blob/rusbal/king.arthur.screenshot.raymond.usbal.png?raw=true)
+![Screenshot](https://github.com/philippinedev/king-arthur/blob/rusbal/king.arthur.screenshot.raymond.usbal.png?raw=true)
