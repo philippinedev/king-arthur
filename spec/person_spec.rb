@@ -302,6 +302,20 @@ RSpec.describe Person do
           expect(subject).to eq paternal_uncles
         end
       end
+
+      describe '#relatives_with_relation - maternal uncle' do
+        let(:relationship) { 'Maternal-Uncle' }
+        let(:mother) { described_class.create(name: "Mapa", gender: "Female", father: gfather, mother: gmother) }
+        let!(:uncle_bob) { described_class.create(name: "Bob", gender: "Male", father: gfather, mother: gmother) }
+        let!(:uncle_john) { described_class.create(name: "John", gender: "Male", father: gfather, mother: gmother) }
+        let!(:aunt_mary) { described_class.create(name: "Mary", gender: "Female", father: gfather, mother: gmother) }
+        let(:me) { described_class.create(name: "Miy", gender: "Male", father: father, mother: mother) }
+        let(:maternal_uncles) { [uncle_bob, uncle_john] }
+
+        it 'returns paternal uncles' do
+          expect(subject).to eq maternal_uncles
+        end
+      end
     end
   end
 end

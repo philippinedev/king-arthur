@@ -62,7 +62,7 @@ class Person < Repository
     return brothers_in_law if relation == 'Brother-In-Law'
 
     return paternal_uncles if relation == 'Paternal-Uncle'
-  #   return maternal_uncles if relation == 'Maternal-Uncle' # TODO
+    return maternal_uncles if relation == 'Maternal-Uncle'
   #   return paternal_aunts  if relation == 'Paternal-Aunt'  # TODO
   #   return maternal_aunts  if relation == 'Maternal-Aunt'
 
@@ -109,6 +109,10 @@ class Person < Repository
 
   def paternal_uncles
     father.brothers
+  end
+
+  def maternal_uncles
+    mother.brothers
   end
 
   def sisters_in_law_via_spouse
