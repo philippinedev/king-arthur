@@ -56,15 +56,16 @@ class Person < Repository
   def relatives_with_relation(relation)
     return sons           if relation == 'Son'
     return daughters      if relation == 'Daughter'
-  #
+
+    return siblings       if relation == 'Siblings'
+  #   return sister_in_law  if relation == 'Sister-In-Law'
+  #   return brother_in_law if relation == 'Brother-In-Law' # TODO
+
   #   return paternal_uncle if relation == 'Paternal-Uncle' # TODO
   #   return maternal_uncle if relation == 'Maternal-Uncle' # TODO
   #   return paternal_aunt  if relation == 'Paternal-Aunt'  # TODO
   #   return maternal_aunt  if relation == 'Maternal-Aunt'
 
-  #   return sister_in_law  if relation == 'Sister-In-Law'
-  #   return brother_in_law if relation == 'Brother-In-Law' # TODO
-  #   return siblings       if relation == 'Siblings'
   end
 
   def sons
@@ -83,10 +84,10 @@ class Person < Repository
     end
   end
 
-  # def siblings
-  #   mother.children
-  #     .filter { |child| child.name != self.name }
-  # end
+  def siblings
+    mother.mothers_children
+      .filter { |child| child.id != self.id }
+  end
 
   # def sister_in_law
   #   male_siblings.map { |brother| brother.spouse }.compact
@@ -106,10 +107,9 @@ class Person < Repository
   #     .filter { |child| child.name != self.name }
   # end
 
-  # def children
-  #   Application.database
-  #     .filter { |child| child.mother&.name == self.name }
-  # end
+  def mothers_children
+    Person.where(mother_id: self.id)
+  end
 
   # def female_children
   #   children

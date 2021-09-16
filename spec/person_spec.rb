@@ -181,11 +181,12 @@ RSpec.describe Person do
     end
   end
 
-  context 'with offspring' do
-    describe '#relatives_with_relation - son' do
+  context 'with parents' do
+    let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
+    let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
+
+    describe '#relatives_with_relation - sons' do
       let(:relationship) { 'Son' }
-      let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
-      let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
       let!(:son1)   { described_class.create(name: "Boy1", gender: "Male", father: father, mother: mother) }
       let!(:son2)   { described_class.create(name: "Boy2", gender: "Male", father: father, mother: mother) }
       let!(:daughter) { described_class.create(name: "Girly", gender: "Female", father: father, mother: mother) }
@@ -210,10 +211,8 @@ RSpec.describe Person do
       end
     end
 
-    describe '#relatives_with_relation - daughter' do
+    describe '#relatives_with_relation - daughters' do
       let(:relationship) { 'Daughter' }
-      let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
-      let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
       let!(:daughter1) { described_class.create(name: "Girly1", gender: "Female", father: father, mother: mother) }
       let!(:daughter2) { described_class.create(name: "Girly2", gender: "Female", father: father, mother: mother) }
       let!(:son)   { described_class.create(name: "Boy", gender: "Male", father: father, mother: mother) }
@@ -235,6 +234,20 @@ RSpec.describe Person do
         it "knows the mother's daughters" do
           expect(subject).to eq daughters
         end
+      end
+    end
+
+    describe '#relatives_with_relation - siblings' do
+      let(:relationship) { 'Siblings' }
+      let!(:daughter1) { described_class.create(name: "Girly1", gender: "Female", father: father, mother: mother) }
+      let!(:daughter2) { described_class.create(name: "Girly2", gender: "Female", father: father, mother: mother) }
+      let!(:son)   { described_class.create(name: "Boy", gender: "Male", father: father, mother: mother) }
+      let(:siblings) { [daughter2, son] }
+
+      subject { daughter1.relatives_with_relation(relationship) }
+
+      it 'will return siblings' do
+        expect(subject).to eq siblings
       end
     end
   end
