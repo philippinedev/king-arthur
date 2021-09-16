@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe FileProcessor do
   before do
-    Application.reseed
+    Person.clear!
+    Seed.call
   end
 
   subject { described_class.call(file) }
@@ -20,8 +21,8 @@ RSpec.describe FileProcessor do
 
       it 'saves the correct person info' do
         subject
-        child  = Application.find_by_name('Minerva')
-        mother = Application.find_by_name('Flora')
+        child  = Person.where(name: 'Minerva').first
+        mother = Person.where(name: 'Flora').first
 
         expect(child.mother).to eq mother
         expect(child.father).to eq mother.spouse
@@ -29,7 +30,7 @@ RSpec.describe FileProcessor do
       end
 
       it 'adds one person to database' do
-        expect { subject }.to change { Application.database.count }.by(1)
+        expect { subject }.to change { Person.count }.by(1)
       end
     end
 
