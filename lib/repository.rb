@@ -4,6 +4,10 @@ class Repository
       new(params).save
     end
 
+    def all
+      self.store.values
+    end
+
     def count
       self.store.count
     end

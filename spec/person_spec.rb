@@ -185,6 +185,8 @@ RSpec.describe Person do
     let!(:father) { described_class.create(name: "Fathero", gender: "Male") }
     let!(:mother) { described_class.create(name: "Mothery", gender: "Female", spouse: father) }
 
+    subject { me.relatives_with_relation(relationship) }
+
     describe '#relatives_with_relation - sons' do
       let(:relationship) { 'Son' }
       let!(:son1)   { described_class.create(name: "Boy1", gender: "Male", father: father, mother: mother) }
@@ -192,10 +194,8 @@ RSpec.describe Person do
       let!(:daughter) { described_class.create(name: "Girly", gender: "Female", father: father, mother: mother) }
       let(:sons) { [son1, son2] }
 
-      subject { parent.relatives_with_relation(relationship) }
-
       context 'when father is parent' do
-        let(:parent) { father }
+        let(:me) { father }
 
         it "knows the father's sons" do
           expect(subject).to eq sons
@@ -203,7 +203,7 @@ RSpec.describe Person do
       end
 
       context 'when mother is parent' do
-        let(:parent) { mother }
+        let(:me) { mother }
 
         it "knows the mother's sons" do
           expect(subject).to eq sons
@@ -218,10 +218,8 @@ RSpec.describe Person do
       let!(:son)   { described_class.create(name: "Boy", gender: "Male", father: father, mother: mother) }
       let(:daughters) { [daughter1, daughter2] }
 
-      subject { parent.relatives_with_relation(relationship) }
-
       context 'when father is parent' do
-        let(:parent) { father }
+        let(:me) { father }
 
         it "knows the father's daughters" do
           expect(subject).to eq daughters
@@ -229,7 +227,7 @@ RSpec.describe Person do
       end
 
       context 'when mother is parent' do
-        let(:parent) { mother }
+        let(:me) { mother }
 
         it "knows the mother's daughters" do
           expect(subject).to eq daughters
@@ -239,15 +237,32 @@ RSpec.describe Person do
 
     describe '#relatives_with_relation - siblings' do
       let(:relationship) { 'Siblings' }
-      let!(:daughter1) { described_class.create(name: "Girly1", gender: "Female", father: father, mother: mother) }
+      let!(:me) { described_class.create(name: "Miy", gender: "Female", father: father, mother: mother) }
       let!(:daughter2) { described_class.create(name: "Girly2", gender: "Female", father: father, mother: mother) }
       let!(:son)   { described_class.create(name: "Boy", gender: "Male", father: father, mother: mother) }
       let(:siblings) { [daughter2, son] }
 
-      subject { daughter1.relatives_with_relation(relationship) }
-
       it 'will return siblings' do
         expect(subject).to eq siblings
+      end
+    end
+
+    describe '#relatives_with_relation - sisters in law' do
+      let(:relationship) { 'Sister-In-Law' }
+      let(:me_hus_papa) { described_class.create(name: "Moypapa", gender: "Male") }
+      let(:me_hus_mama) { described_class.create(name: "Moymama", gender: "Female") }
+      let!(:me_hus_sis1) { described_class.create(name: "Moysis1", gender: "Female", father: me_hus_papa, mother: me_hus_mama) }
+      let!(:me_hus_sis2) { described_class.create(name: "Moysis2", gender: "Female", father: me_hus_papa, mother: me_hus_mama) }
+      let(:me_hus) { described_class.create(name: "Moy", gender: "Male", father: me_hus_papa, mother: me_hus_mama) }
+      let(:me) { described_class.create(name: "Miy", gender: "Female", father: father, mother: mother, spouse: me_hus) }
+      let!(:me_bro1_wife) { described_class.create(name: "Miybro1wife", gender: "Female") }
+      let!(:me_bro2_wife) { described_class.create(name: "Miybro2wife", gender: "Female") }
+      let!(:me_bro1) { described_class.create(name: "Miybro1", gender: "Male", father: father, mother: mother, spouse: me_bro1_wife) }
+      let!(:me_bro2) { described_class.create(name: "Miybro2", gender: "Male", father: father, mother: mother, spouse: me_bro2_wife) }
+      let(:sisters_in_law) { [me_hus_sis1, me_hus_sis2, me_bro1_wife, me_bro2_wife] }
+
+      it 'returns sisters in law' do
+        expect(subject).to eq sisters_in_law
       end
     end
   end

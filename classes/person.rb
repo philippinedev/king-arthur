@@ -58,13 +58,13 @@ class Person < Repository
     return daughters      if relation == 'Daughter'
 
     return siblings       if relation == 'Siblings'
-  #   return sister_in_law  if relation == 'Sister-In-Law'
-  #   return brother_in_law if relation == 'Brother-In-Law' # TODO
+    return sisters_in_law  if relation == 'Sister-In-Law'
+  #   return brothers_in_law if relation == 'Brother-In-Law' # TODO
 
-  #   return paternal_uncle if relation == 'Paternal-Uncle' # TODO
-  #   return maternal_uncle if relation == 'Maternal-Uncle' # TODO
-  #   return paternal_aunt  if relation == 'Paternal-Aunt'  # TODO
-  #   return maternal_aunt  if relation == 'Maternal-Aunt'
+  #   return paternal_uncles if relation == 'Paternal-Uncle' # TODO
+  #   return maternal_uncles if relation == 'Maternal-Uncle' # TODO
+  #   return paternal_aunts  if relation == 'Paternal-Aunt'  # TODO
+  #   return maternal_aunts  if relation == 'Maternal-Aunt'
 
   end
 
@@ -87,6 +87,29 @@ class Person < Repository
   def siblings
     mother.mothers_children
       .filter { |child| child.id != self.id }
+  end
+
+  def brothers
+    siblings
+      .filter { |child| child.gender == MALE }
+  end
+
+  def sisters
+    siblings
+      .filter { |child| child.gender == FEMALE }
+  end
+
+  def sisters_in_law
+    (sisters_in_law_via_spouse + sisters_in_law_via_siblings)
+  end
+
+  def sisters_in_law_via_spouse
+    spouse&.sisters || []
+  end
+
+  def sisters_in_law_via_siblings
+    brothers.map { |bro| bro.spouse }
+      .compact
   end
 
   # def sister_in_law
