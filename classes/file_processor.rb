@@ -25,7 +25,7 @@ class FileProcessor
   end
 
   def add_child(row)
-    mother = Application.find_by_name(row[:mother])
+    mother = Person.where(name: row[:mother]).first
     return 'PERSON_NOT_FOUND' if mother.nil?
     return 'CHILD_ADDITION_FAILED' if mother.male?
 
@@ -43,7 +43,7 @@ class FileProcessor
   end
 
   def get_relationship(row)
-    person = Application.find_by_name(row[:person])
+    person = Person.where(name: row[:person]).first
     return 'PERSON_NOT_FOUND' if person.nil?
 
     relatives = person.relatives_with_relation(row[:relationship])
