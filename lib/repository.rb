@@ -27,8 +27,10 @@ class Repository
         .filter { |x| x.end_with? "_id" }
         .first
 
-      key_cond = key.split("_").map { |x| x.to_sym }
-      key_value = params[key.to_sym]
+      if key
+        key_cond = key.split("_").map { |x| x.to_sym }
+        key_value = params[key.to_sym]
+      end
 
       # Non-ID conditions
       non_id_keys = params.keys
@@ -39,7 +41,10 @@ class Repository
       non_id_conds = non_id_keys.map { |key| Hash[key, params[key]] }
 
       tmp = store.values
-        .filter { |a| a.send(key_cond[0])&.id == key_value }
+
+      if key
+        tmp = tmp.filter { |a| a.send(key_cond[0])&.id == key_value }
+      end
 
       non_id_conds.each do |cond|
         tmp = tmp.filter { |a| a.send(cond.first[0]) == cond.first[1] }
