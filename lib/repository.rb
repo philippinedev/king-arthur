@@ -32,6 +32,8 @@ class Repository
 
   def save
     store['1'] = self
+    after_save
+    self
   end
 
   private
